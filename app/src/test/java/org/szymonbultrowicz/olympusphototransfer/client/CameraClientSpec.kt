@@ -1,7 +1,10 @@
 package org.szymonbultrowicz.olympusphototransfer.client
 
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
 import org.junit.Test
+import org.szymonbultrowicz.olympusphototransfer.TestHelper
+import java.io.File
 import java.net.URL
 import java.nio.file.Paths
 import java.time.ZoneId
@@ -33,6 +36,54 @@ class CameraClientSpec {
                 )
             )
         assertEquals(emptyList<FileInfo>(), cc.listFiles())
+    }
+
+    @Test
+    fun cameraServerClient_shouldCorrectlyListRemoteFilesWhenManyRemoteFilesFromOmdEM10() {
+        val cc = CameraClient(
+            generateClientCameraConfig(
+                "01-root-em10-onefolder.html",
+                specialMappingUrlTranslator(
+                    "01-root-em10-onefolder.html",
+                    "0001-em10-many-files.html"
+                )
+            )
+        )
+        assertEquals(135, cc.listFiles().size)
+    }
+
+    @Test
+    fun cameraServerClient_shouldCorrectlyListRemoteFilesAndDownloadWhenHavingOneRemoteFileFromOmdEM10() {
+        val cc = CameraClient(
+            generateClientCameraConfig(
+                "01-root-em10-onefolder.html",
+                specialMappingUrlTranslator(
+                    "01-root-em10-onefolder.html",
+                    "0002-em10-downloadable-file.html"
+                )
+            )
+        )
+
+        // wlansd[0]="/DCIM/100OLYMP/,OR.ORF,15441739,0,18229,43541";
+        val remoteFiles = cc.listFiles()
+        assertEquals(1, remoteFiles.size)
+        assertEquals("100OLYMP", remoteFiles[0].folder)
+        assertEquals("OR.ORF", remoteFiles[0].name)
+        assertEquals(15441739L, remoteFiles[0].size)
+        assertEquals(18229, remoteFiles[0].date)
+        assertEquals(43541, remoteFiles[0].time)
+        assertNotNull(remoteFiles[0].thumbnailUrl)
+
+        val outputDirectory = TestHelper.createTmpDir("output")
+
+        val downloaded = cc.downloadFile(remoteFiles[0], outputDirectory)
+        assertNotNull(downloaded)
+
+        val downloadedFileToCheck = File(File(outputDirectory, "100OLYMP"), "OR.ORF")
+
+        assertEquals(true, downloadedFileToCheck.exists())
+
+        downloadedFileToCheck.deleteOnExit()
     }
 
     fun generateClientCameraConfig(rootHtmlName: String, mapping: (URL) -> URL): CameraClientConfig {
