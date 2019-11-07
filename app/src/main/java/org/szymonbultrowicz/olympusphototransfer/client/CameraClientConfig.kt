@@ -58,5 +58,5 @@ data class CameraClientConfig(
      * The assumption: the timezone used to set up the time of the camera must be the same timezone on which
      * this application is executed.
      */
-    val zoneOffset = forcedTimezone ?: OffsetDateTime.now().offset
+    val zoneOffset: ZoneId = forcedTimezone ?: OffsetDateTime.now().offset
 }
