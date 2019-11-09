@@ -9,6 +9,8 @@ import java.nio.charset.StandardCharsets
 import java.time.ZonedDateTime
 import java.util.logging.Logger
 
+import org.szymonbultrowicz.olympusphototransfer.extensions.collections.component6
+
 class CameraClient(
     private val configuration: CameraClientConfig
 ) {
@@ -37,7 +39,8 @@ class CameraClient(
             logger.info("Html for directory begin ($dirUrl / $dir)")
             dirHtmlLines.forEach { line -> logger.info(line) }
             logger.info("Html for directory end\n")
-            filesFromDirHtml(dirHtmlLines, dir)
+            val f = filesFromDirHtml(dirHtmlLines, dir)
+            f
         }
 
         files.forEach { file ->
@@ -47,7 +50,7 @@ class CameraClient(
         return files
     }
 
-    private fun setDateTime(destinationFile: File, dateTime: ZonedDateTime): Unit {
+    private fun setDateTime(destinationFile: File, dateTime: ZonedDateTime) {
         if (configuration.preserveCreationDate) {
             val epochSecs = dateTime.toEpochSecond()
             val success = destinationFile.setLastModified(epochSecs * 1000)
@@ -67,17 +70,19 @@ class CameraClient(
     fun downloadFile(file: FileInfo, localTargetDirectory: File): File? {
         val urlSourceFile = configuration.fileUrl(baseDirFileUrl(configuration.serverBaseUrl, file.folder, file.name))
         val inputStream = urlSourceFile.openStream()
-        try {
+        return try {
             val channel = Channels.newChannel(inputStream)
             val localDirectory = File (localTargetDirectory, file.folder)
-//            Directories.mkdirs(localDirectory)
+            if (!localDirectory.exists()) {
+                localDirectory.mkdirs()
+            }
             val destinationFile = File (localDirectory, file.name)
             val outputStream = FileOutputStream (destinationFile)
             outputStream.channel.transferFrom(channel, 0, Long.MAX_VALUE)
             setDateTime(destinationFile, file.humanDateTime.atZone(configuration.zoneOffset))
-            return destinationFile.absoluteFile
+            destinationFile.absoluteFile
         } catch (e: Exception) {
-            return null
+            null
         } finally {
             inputStream.close()
         }
@@ -157,9 +162,9 @@ class CameraClient(
         val fileRegex = configuration.fileRegex.toRegex()
         val folderNames = rootHtmlLines.flatMap { htmlLineToBeParsed ->
             when {
-                fileRegex.matches(htmlLineToBeParsed) -> {
+                fileRegex.containsMatchIn(htmlLineToBeParsed) -> {
                     val (folderName) = fileRegex.findAll(htmlLineToBeParsed)
-                        .map { group -> group.value }
+                        .map { group -> group.groups[1]!!.value }
                         .toList()
                     return listOf(folderName)
                 }
@@ -180,21 +185,21 @@ class CameraClient(
         val fileRegex = configuration.fileRegex.toRegex()
         val fileIdsAndSize = dirHtmlLines.flatMap { htmlLineToBeParsed ->
             when {
-                fileRegex.matches(htmlLineToBeParsed) -> {
-                    val (fileName, fileSizeBytes, _, date, time) =
-                        fileRegex.findAll(htmlLineToBeParsed)
-                            .map { group -> group.value }
-                            .toList()
-
-                    val thumbnail = thumbnailFileUrl(fileDir, fileName)
-                    return listOf(FileInfo(
-                        fileDir,
-                        fileName,
-                        fileSizeBytes.toLong(),
-                        date.toInt(),
-                        time.toInt(),
-                        thumbnail
-                    ))
+                fileRegex.containsMatchIn(htmlLineToBeParsed) -> {
+                    fileRegex.findAll(htmlLineToBeParsed)
+                        .map { match ->
+                            val (_, fileName, fileSizeBytes, _, date, time) = match.groupValues
+                            val thumbnail = thumbnailFileUrl(fileDir, fileName)
+                            FileInfo(
+                                fileDir,
+                                fileName,
+                                fileSizeBytes.toLong(),
+                                date.toInt(),
+                                time.toInt(),
+                                thumbnail
+                            )
+                        }
+                        .toList()
                 }
                 else -> emptyList<FileInfo>()
             }
