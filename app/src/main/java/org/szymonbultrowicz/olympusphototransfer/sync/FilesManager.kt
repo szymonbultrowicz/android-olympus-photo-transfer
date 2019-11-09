@@ -91,15 +91,17 @@ class FilesManager(
      * @return the local result of the synchronization
      */
     fun syncFile(syncPlanItem: SyncPlanItem): File? {
-        if (listOf(
-                SyncPlanItem.DownloadedStatus.Downloaded,
-                SyncPlanItem.DownloadedStatus.OnlyLocal
-            ).contains(syncPlanItem.downloadStatus)) {
-            logger.fine("Skipping file ${syncPlanItem.fileInfo} as it's been already downloaded")
-            return null
+        return when (syncPlanItem.downloadStatus) {
+            SyncPlanItem.DownloadedStatus.Downloaded,
+            SyncPlanItem.DownloadedStatus.OnlyLocal -> {
+                logger.fine("Skipping file ${syncPlanItem.fileInfo} as it's been already downloaded")
+                null
+            }
+            else -> {
+                logger.fine("Downloading file ${syncPlanItem.fileInfo} to ${config.outputDir} (previous status ${syncPlanItem.downloadStatus})")
+                api.downloadFile(syncPlanItem.fileInfo, config.outputDir)
+            }
         }
-        logger.fine("Downloading file ${syncPlanItem.fileInfo} to ${config.outputDir} (previous status ${syncPlanItem.downloadStatus})")
-        return api.downloadFile(syncPlanItem.fileInfo, config.outputDir)
     }
 
     /**
