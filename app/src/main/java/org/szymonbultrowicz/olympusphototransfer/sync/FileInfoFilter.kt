@@ -38,7 +38,7 @@ class FileInfoFilter {
     ) {
 
         companion object {
-            val Bypass = Criteria()
+            val Bypass = Criteria(null, null, null)
         }
     }
 }
