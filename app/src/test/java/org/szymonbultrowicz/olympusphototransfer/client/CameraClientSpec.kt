@@ -1,8 +1,8 @@
 package org.szymonbultrowicz.olympusphototransfer.client
 
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotNull
-import org.junit.Test
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Test
 import org.szymonbultrowicz.olympusphototransfer.TestHelper
 import java.io.File
 import java.net.URL
@@ -12,11 +12,11 @@ import java.time.ZonedDateTime
 
 class CameraClientSpec {
 
-    val ParisZone = ZoneId.of("Europe/Paris")
-    val ADateTime = ZonedDateTime.of(2015, 9, 21, 21, 16, 21, 0, ParisZone)
-    val ServerBaseUrl = "src/test/resources/org/szymonbultrowicz/olympusphototransfer/client/"
+    private val ParisZone = ZoneId.of("Europe/Paris")
+    private val ADateTime = ZonedDateTime.of(2015, 9, 21, 21, 16, 21, 0, ParisZone)
+    private val ServerBaseUrl = "src/test/resources/org/szymonbultrowicz/olympusphototransfer/client/"
 
-    val DefaultCameraClientConfig = CameraClientConfig(
+    private val DefaultCameraClientConfig = CameraClientConfig(
         serverProtocol = "file",
         serverName = "localhost",
         serverBaseUrl = "/DCIM",
