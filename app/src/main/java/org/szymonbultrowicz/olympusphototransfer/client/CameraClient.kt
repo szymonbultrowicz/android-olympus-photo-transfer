@@ -143,14 +143,12 @@ class CameraClient(
      * @return the reply result of the query
      */
     private fun httpGet(relativeUrl: String, readTimeout: Int = ReadTimeoutMs, connectTimeout: Int = ConnectTimeoutMs): ByteArray {
-        val url = configuration.fileUrl(relativeUrl)
-        val connection = url.openConnection()
+        val connection = configuration
+            .fileUrl(relativeUrl)
+            .openConnection()
         connection.connectTimeout = connectTimeout
         connection.readTimeout = readTimeout
-        val inputStream = connection.getInputStream()
-        return inputStream.use { stream ->
-            stream.readBytes()
-        }
+        return connection.getInputStream().use { it.readBytes() }
     }
 
     /**
@@ -227,6 +225,5 @@ class CameraClient(
         const val ConnectTimeoutMs = 20000 // TODO make configurable
         const val ReadTimeoutMs = 20000 // TODO make configurable
         const val NewLineSplit = "\\r?\\n"
-//        val LocalZoneOffset = OffsetDateTime.now().getOffset()
     }
 }
