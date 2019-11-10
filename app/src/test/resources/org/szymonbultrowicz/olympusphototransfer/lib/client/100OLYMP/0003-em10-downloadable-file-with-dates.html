@@ -2,16 +2,17 @@
 <!--suppress ALL -->
 <html>
 <head>
-    <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=shift_jis">
-    <meta name="viewport" content="width=device-width" />
-    <style TYPE="text/css">
-        a{text-decoration:none}
-        img{border-style:none;margin:0}
-        .box{background-position:center;border:thin solid #2E2E2E;box-shadow:3px 3px 3px rgba(0,0,0,0.4); background-color:#000000; color:#929292;float:left;font-size:10px;margin:5px;padding:4px;}
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=shift_jis">
+<meta name="viewport" content="width=device-width" />
+<style TYPE="text/css">
+a{text-decoration:none}
+img{border-style:none;margin:0}
+.box{background-position:center;border:thin solid #2E2E2E;box-shadow:3px 3px 3px rgba(0,0,0,0.4); background-color:#000000; color:#929292;float:left;font-size:10px;margin:5px;padding:4px;}
 
-    </style>
-    <script type="text/javascript">
+</style>
+<script type="text/javascript">
 wlansd = new Array();
+wlansd[0]="/DCIM/107OLYMP,P1144737.ORF,15661508,0,20014,44917";
 wlansd.sort(cmptime);
 wlansd.sort(cmpdate);
 wlansd.reverse();
@@ -35,7 +36,7 @@ flag = true;
 cnt = 0;
 ltmo = 0;
 io = new Image();
-function LoadImgs() {
+function LoadImgs() { 
 if( flag ){ io.src = icon[cnt]; flag = false;}
 
 if( io.complete ){
@@ -84,23 +85,22 @@ document.write('<div style="background-color: #2E2E2E;" class="box"><a href="'+h
 </head>
 <body background="/WEB_PARTS/bg_1px.gif" onLoad="LoadImgs()" align=center>
 <center>
-    <img src = "/WEB_PARTS/title.gif" width="300px" height="27px" alt="TITLE">
-    <hr color="#2E2E2E">
-    <div style="position: relative;">
-        <div style="background-color: #2E2E2E; padding: 10px; margin-bottom: 10px; border: 1px solid #2E2E2E;">
-            <div align="left">
-                <font color="#929292">></font><a href="/DCIM"><font color="#929292">DCIM</font></a><font color="#929292">></font>
-                <script type="text/javascript">
+<img src = "/WEB_PARTS/title.gif" width="300px" height="27px" alt="TITLE">
+<hr color="#2E2E2E">
+<div style="position: relative;">
+<div style="background-color: #2E2E2E; padding: 10px; margin-bottom: 10px; border: 1px solid #2E2E2E;">
+<div align="left">
+<font color="#929292">></font><a href="/DCIM"><font color="#929292">DCIM</font></a><font color="#929292">></font>
+<script type="text/javascript">
 var path = location.pathname;
 var dcf = path.split("/");
 document.write('<font color="#929292">'+dcf[2]+'</font>');
 </script>
-                </font>
-                <br>
-            </div>
-        </div>
-    </div>
-    <script type="text/javascript">
+<br>
+</div>
+</div>
+</div>
+<script type="text/javascript">
 list();
 </script>
 </center>

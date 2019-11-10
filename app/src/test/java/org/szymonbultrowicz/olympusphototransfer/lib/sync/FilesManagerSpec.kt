@@ -1,4 +1,4 @@
-package org.szymonbultrowicz.olympusphototransfer.sync
+package org.szymonbultrowicz.olympusphototransfer.lib.sync
 
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.*
@@ -7,8 +7,8 @@ import org.junit.jupiter.api.TestInstance
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
 import org.szymonbultrowicz.olympusphototransfer.TestHelper
-import org.szymonbultrowicz.olympusphototransfer.client.CameraClient
-import org.szymonbultrowicz.olympusphototransfer.client.FileInfo
+import org.szymonbultrowicz.olympusphototransfer.lib.client.CameraClient
+import org.szymonbultrowicz.olympusphototransfer.lib.client.FileInfo
 import java.io.File
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)

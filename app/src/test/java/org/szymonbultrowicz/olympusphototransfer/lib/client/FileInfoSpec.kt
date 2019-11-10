@@ -1,4 +1,4 @@
-package org.szymonbultrowicz.olympusphototransfer.client
+package org.szymonbultrowicz.olympusphototransfer.lib.client
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test

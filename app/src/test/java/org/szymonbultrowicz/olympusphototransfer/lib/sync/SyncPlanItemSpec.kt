@@ -1,8 +1,8 @@
-package org.szymonbultrowicz.olympusphototransfer.sync
+package org.szymonbultrowicz.olympusphototransfer.lib.sync
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import org.szymonbultrowicz.olympusphototransfer.client.FileInfo
+import org.szymonbultrowicz.olympusphototransfer.lib.client.FileInfo
 
 class SyncPlanItemSpec {
 
