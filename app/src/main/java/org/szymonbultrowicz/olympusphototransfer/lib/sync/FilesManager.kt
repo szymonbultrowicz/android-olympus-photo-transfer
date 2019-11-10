@@ -1,7 +1,7 @@
-package org.szymonbultrowicz.olympusphototransfer.sync
+package org.szymonbultrowicz.olympusphototransfer.lib.sync
 
-import org.szymonbultrowicz.olympusphototransfer.client.CameraClient
-import org.szymonbultrowicz.olympusphototransfer.client.FileInfo
+import org.szymonbultrowicz.olympusphototransfer.lib.client.CameraClient
+import org.szymonbultrowicz.olympusphototransfer.lib.client.FileInfo
 import java.io.File
 import java.util.logging.Logger
 

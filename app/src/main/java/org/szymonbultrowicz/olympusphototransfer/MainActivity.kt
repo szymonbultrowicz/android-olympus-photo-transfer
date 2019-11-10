@@ -2,52 +2,23 @@ package org.szymonbultrowicz.olympusphototransfer
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Environment
-import com.google.android.material.snackbar.Snackbar
-import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
-
+import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import org.szymonbultrowicz.olympusphototransfer.client.CameraClient
-import org.szymonbultrowicz.olympusphototransfer.client.CameraClientConfig
-import org.szymonbultrowicz.olympusphototransfer.sync.FilesManager
+import org.szymonbultrowicz.olympusphototransfer.app.SettingsActivity
+import org.szymonbultrowicz.olympusphototransfer.app.photolist.PhotoListFragment
+import org.szymonbultrowicz.olympusphototransfer.lib.client.FileInfo
 import java.util.logging.Logger
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), PhotoListFragment.OnListFragmentInteractionListener {
 
-    val LOG = Logger.getLogger(javaClass.name)
+    private val logger = Logger.getLogger(javaClass.name)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
-
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
-        }
-
-        val camera = CameraClient(CameraClientConfig(
-            "http",
-            "192.168.1.102",
-            8000,
-            "/DCIM",
-            "wlan.*=.*,(.*),(\\d+),(\\d+),(\\d+),(\\d+).*",
-            true
-        ))
-
-        CoroutineScope(Dispatchers.Main).launch {
-            val isConnected = checkIsConnected(camera)
-            Logger.getLogger(this.javaClass.name).info("connected: $isConnected")
-            if (isConnected) {
-                syncFiles(camera)
-            }
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -69,20 +40,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private suspend fun checkIsConnected(camera: CameraClient): Boolean = withContext(Dispatchers.IO) {
-        camera.isConnected()
-    }
-
-    private suspend fun syncFiles(camera: CameraClient) = withContext(Dispatchers.IO) {
-        val dir = applicationContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-        if (dir != null) {
-            val filesManager = FilesManager(
-                camera,
-                FilesManager.FilesManager.Config(dir)
-            )
-
-            filesManager.listRemoteFiles().forEach { LOG.info(it.name) }
-        }
-
+    override fun onListFragmentInteraction(item: FileInfo?) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

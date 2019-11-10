@@ -1,4 +1,4 @@
-package org.szymonbultrowicz.olympusphototransfer.client
+package org.szymonbultrowicz.olympusphototransfer.lib.client
 
 import java.net.URL
 import java.time.LocalDate

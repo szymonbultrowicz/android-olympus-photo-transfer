@@ -1,6 +1,6 @@
-package org.szymonbultrowicz.olympusphototransfer.sync
+package org.szymonbultrowicz.olympusphototransfer.lib.sync
 
-import org.szymonbultrowicz.olympusphototransfer.client.FileInfo
+import org.szymonbultrowicz.olympusphototransfer.lib.client.FileInfo
 import java.nio.file.FileSystems
 import java.nio.file.Paths
 import java.time.LocalDate

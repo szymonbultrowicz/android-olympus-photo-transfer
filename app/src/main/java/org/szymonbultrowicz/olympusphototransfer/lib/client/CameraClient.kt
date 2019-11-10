@@ -1,4 +1,4 @@
-package org.szymonbultrowicz.olympusphototransfer.client
+package org.szymonbultrowicz.olympusphototransfer.lib.client
 
 import java.io.File
 import java.io.FileOutputStream

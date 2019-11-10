@@ -1,6 +1,6 @@
-package org.szymonbultrowicz.olympusphototransfer.sync
+package org.szymonbultrowicz.olympusphototransfer.lib.sync
 
-import org.szymonbultrowicz.olympusphototransfer.client.FileInfo
+import org.szymonbultrowicz.olympusphototransfer.lib.client.FileInfo
 
 data class SyncPlanItem(
     val fileInfo: FileInfo,

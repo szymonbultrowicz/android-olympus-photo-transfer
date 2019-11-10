@@ -1,4 +1,4 @@
-package org.szymonbultrowicz.olympusphototransfer.client
+package org.szymonbultrowicz.olympusphototransfer.lib.client
 
 import java.net.URL
 import java.time.OffsetDateTime
@@ -29,12 +29,12 @@ data class CameraClientConfig(
      * Regex used to identify files from the server's response
      * Sample: wlansd[17]="/DCIM/100OLYMP,P7290009.JPG,278023,0,18173,42481";
      */
-    val fileRegex: String,
+    val fileRegex: String = "wlan.*=.*,(.*),(\\d+),(\\d+),(\\d+),(\\d+).*",
 
     /*
      * Flag to preserve the creation date for each file, as provided by the server
      */
-    val preserveCreationDate: Boolean,
+    val preserveCreationDate: Boolean = true,
 
     /**
      * URL translator, used only for testing purposes
