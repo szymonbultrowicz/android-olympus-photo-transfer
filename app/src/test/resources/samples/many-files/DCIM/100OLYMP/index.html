@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<!--suppress ALL -->
+<html>
+<head>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=shift_jis">
+<meta name="viewport" content="width=device-width" />
+<style TYPE="text/css">
+a{text-decoration:none}
+img{border-style:none;margin:0}
+.box{background-position:center;border:thin solid #2E2E2E;box-shadow:3px 3px 3px rgba(0,0,0,0.4); background-color:#000000; color:#929292;float:left;font-size:10px;margin:5px;padding:4px;}
+
+</style>
+<script type="text/javascript">
+wlansd = new Array();
+wlansd[0]="/DCIM/100OLYMP/,P1.ORF,15441739,0,18229,43541";
+wlansd[1]="/DCIM/100OLYMP/,P2.ORF,15288519,0,18228,30168";
+wlansd[2]="/DCIM/100OLYMP/,P3.ORF,15260655,0,18228,30172";
+wlansd[3]="/DCIM/100OLYMP/,P4.ORF,15255169,0,18228,30172";
+wlansd[4]="/DCIM/100OLYMP/,P5.ORF,15288033,0,18228,30184";
+wlansd[5]="/DCIM/100OLYMP/,P6.ORF,15178103,0,18228,30187";
+wlansd[6]="/DCIM/100OLYMP/,P7.ORF,14464083,0,18228,30204";
+wlansd[7]="/DCIM/100OLYMP/,P8.ORF,14463632,0,18228,30204";
+wlansd[8]="/DCIM/100OLYMP/,P9.ORF,14461340,0,18228,30205";
+wlansd[9]="/DCIM/100OLYMP/,P10.ORF,14421564,0,18228,30211";
+wlansd[10]="/DCIM/100OLYMP/,P11.ORF,14427316,0,18228,30211";
+wlansd[11]="/DCIM/100OLYMP/,P12.ORF,14811403,0,18228,30234";
+wlansd[12]="/DCIM/100OLYMP/,P13.ORF,14825322,0,18228,30243";
+wlansd[13]="/DCIM/100OLYMP/,P14.ORF,14954401,0,18228,30477";
+wlansd[14]="/DCIM/100OLYMP/,P15.ORF,14955203,0,18228,30477";
+wlansd[15]="/DCIM/100OLYMP/,P16.ORF,15002457,0,18228,30482";
+wlansd[16]="/DCIM/100OLYMP/,P17.ORF,15006371,0,18228,30482";
+wlansd[17]="/DCIM/100OLYMP/,P18.ORF,15021621,0,18228,30484";
+wlansd[18]="/DCIM/100OLYMP/,P19.ORF,15020585,0,18228,30485";
+wlansd[19]="/DCIM/100OLYMP/,P20.ORF,15165112,0,18228,30894";
+wlansd[20]="/DCIM/100OLYMP/,P21.ORF,14254737,0,18228,31562";
+wlansd[21]="/DCIM/100OLYMP/,P22.ORF,15638892,0,18228,31579";
+wlansd[22]="/DCIM/100OLYMP/,P23.ORF,16143656,0,18228,31589";
+wlansd[23]="/DCIM/100OLYMP/,P24.ORF,15617715,0,18228,31591";
+wlansd[24]="/DCIM/100OLYMP/,P25.ORF,15598823,0,18228,31820";
+wlansd[25]="/DCIM/100OLYMP/,P26.ORF,14853398,0,18228,31896";
+wlansd[26]="/DCIM/100OLYMP/,P27.ORF,14655040,0,18228,31901";
+wlansd[27]="/DCIM/100OLYMP/,P28.ORF,14916590,0,18228,31908";
+wlansd[28]="/DCIM/100OLYMP/,P29.ORF,14873534,0,18228,31921";
+wlansd[29]="/DCIM/100OLYMP/,P30.ORF,13801824,0,18228,31929";
+wlansd[30]="/DCIM/100OLYMP/,P30.JPG,13801824,0,18228,31929";
+wlansd[31]="/DCIM/100OLYMP/,P31.ORF,13802311,0,18228,31936";
+wlansd[32]="/DCIM/100OLYMP/,P31.JPG,13802311,0,18228,31936";
+wlansd[33]="/DCIM/100OLYMP/,P32.ORF,14018020,0,18228,33052";
+wlansd[34]="/DCIM/100OLYMP/,P32.JPG,14018020,0,18228,33052";
+wlansd[35]="/DCIM/100OLYMP/,P33.ORF,14648444,0,18228,33110";
+wlansd[36]="/DCIM/100OLYMP/,P33.JPG,14648444,0,18228,33110";
+wlansd[37]="/DCIM/100OLYMP/,P34.ORF,14456843,0,18228,33114";
+wlansd[38]="/DCIM/100OLYMP/,P34.JPG,14456843,0,18228,33114";
+wlansd[39]="/DCIM/100OLYMP/,P35.ORF,15633481,0,18228,33139";
+wlansd[40]="/DCIM/100OLYMP/,P35.JPG,15633481,0,18228,33139";
+wlansd[41]="/DCIM/100OLYMP/,P36.ORF,15752276,0,18228,33147";
+wlansd[42]="/DCIM/100OLYMP/,P37.ORF,15973142,0,18228,33148";
+wlansd[43]="/DCIM/100OLYMP/,P38.ORF,15612276,0,18228,33154";
+wlansd.sort(cmptime);
+wlansd.sort(cmpdate);
+wlansd.reverse();
+function cmptime(a, b){var g = a.split(",");var f = b.split(",");return g[5] - f[5];}
+function cmpdate(a, b){var g = a.split(",");var f = b.split(",");return g[4] - f[4];}
+
+icon = new Array();
+for( i = 0 ; i < wlansd.length ; i ++ ){
+var b = wlansd[i].split(",");
+var name = b[1];
+var ext = name.split(".");
+if( !(b[3] & 0x10) ){
+if(( ext[1] == "JPG" )||(ext[1] == "ORF")||(ext[1] == "MPO")||(ext[1] == "MOV")||(ext[1] == "AVI")){icon[i] = b[0]+"/"+name;}
+else{icon[i] = "";}
+}
+else{
+icon[i] = "";
+}
+}
+flag = true;
+cnt = 0;
+ltmo = 0;
+io = new Image();
+function LoadImgs() { 
+if( flag ){ io.src = icon[cnt]; flag = false;}
+
+if( io.complete ){
+if( io.width > 30 ){
+var box = document.images[("n" + cnt)];
+box.src = icon[cnt];
+if( (io.width == 120) && (io.height == 160) ){
+box.width = io.width*(3.0/4.0);
+box.height = io.height*(3.0/4.0);
+box.style.marginLeft = "18px";
+box.style.marginRight = "17px";
+}
+}
+io = new Image();
+cnt++;
+if( cnt < icon.length ){io.src = icon[cnt];}
+ltmo = 0;
+}
+else{
+if(ltmo > 90 ){
+io = new Image();
+cnt++;
+if( cnt < icon.length ){io.src = icon[cnt];}
+ltmo = 0;
+}
+else{
+ltmo ++;
+}
+}
+if( cnt < icon.length ){
+setTimeout("LoadImgs()",30);
+}
+}
+
+function list(){
+for( i = 0 ; i < wlansd.length ; i ++ ){
+var b = wlansd[i].split(",");
+var path = b[0];
+var name = b[1];
+var href = path + "/" + name;
+var href2 = path + "/FILE.html?" + href;
+document.write('<div style="background-color: #2E2E2E;" class="box"><a href="'+href2+'"><img width="80" height="60" name="n'+i+'"><br>'+'<font color="#929292">'+name+'</font>'+'</a><br></div>');
+}
+}
+</script>
+</head>
+<body background="/WEB_PARTS/bg_1px.gif" onLoad="LoadImgs()" align=center>
+<center>
+<img src = "/WEB_PARTS/title.gif" width="300px" height="27px" alt="TITLE">
+<hr color="#2E2E2E">
+<div style="position: relative;">
+<div style="background-color: #2E2E2E; padding: 10px; margin-bottom: 10px; border: 1px solid #2E2E2E;">
+<div align="left">
+<font color="#929292">></font><a href="/DCIM"><font color="#929292">DCIM</font></a><font color="#929292">></font>
+<script type="text/javascript">
+var path = location.pathname;
+var dcf = path.split("/");
+document.write('<font color="#929292">'+dcf[2]+'</font>');
+</script>
+<br>
+</div>
+</div>
+</div>
+<script type="text/javascript">
+list();
+</script>
+</center>
+</body>
+</html>
