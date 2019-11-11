@@ -6,6 +6,7 @@ import android.os.Environment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
@@ -20,6 +21,7 @@ import org.szymonbultrowicz.olympusphototransfer.lib.sync.FilesManager
 import java.lang.Exception
 import java.net.ConnectException
 import java.net.SocketTimeoutException
+import java.time.ZoneOffset
 import java.util.logging.Logger
 
 /**
@@ -35,10 +37,7 @@ class PhotoListFragment : Fragment() {
 
     private var listener: OnListFragmentInteractionListener? = null
 
-    private val myAdapter = MyItemRecyclerViewAdapter(
-        emptyList(),
-        listener
-    )
+    private var myAdapter: MyItemRecyclerViewAdapter? = null
 
     private var camera: CameraClient? = null
 
@@ -58,7 +57,7 @@ class PhotoListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_photo_list_list, container, false)
+        val view = inflater.inflate(R.layout.fragment_photo_list, container, false)
 
         // Set the adapter
         if (view is RecyclerView) {
@@ -67,6 +66,10 @@ class PhotoListFragment : Fragment() {
                     columnCount <= 1 -> LinearLayoutManager(context)
                     else -> GridLayoutManager(context, columnCount)
                 }
+                myAdapter = MyItemRecyclerViewAdapter(
+                    emptyList(),
+                    listener
+                )
                 adapter = myAdapter
             }
         }
@@ -90,10 +93,39 @@ class PhotoListFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         CoroutineScope(Dispatchers.Main).launch {
-            myAdapter.updateData(
-                fetchCameraFiles(camera)
-            )
+            refreshFiles()
         }
+    }
+
+    private suspend fun refreshFiles() {
+        try {
+            val files = fetchCameraFiles(
+                createCameraClient()
+            )
+            /// TODO: improve sort
+            val sortedFiles = files.sortedByDescending { it.humanDateTime.atZone(ZoneOffset.UTC).toEpochSecond() }
+            myAdapter?.updateData(sortedFiles)
+        } catch (e: Exception) {
+            when (e) {
+                is SocketTimeoutException,
+                is ConnectException -> {
+                    Toast.makeText(context, "Failed to connect to the camera", Toast.LENGTH_SHORT)
+                        .show()
+                    logger.warning("Failed to connec to the camera $e")
+                }
+                else -> {
+                    Toast.makeText(context, "Unknown error: $e", Toast.LENGTH_SHORT)
+                        .show()
+                    logger.severe("Unknown error $e")
+                }
+            }
+        }
+    }
+
+    private fun createCameraClient(): CameraClient {
+        return CameraClient(CameraClientConfigFactory.fromPreferences(
+            PreferenceManager.getDefaultSharedPreferences(context)
+        ))
     }
 
     private suspend fun fetchCameraFiles(camera: CameraClient?): List<FileInfo> = withContext(Dispatchers.IO) {
@@ -110,20 +142,8 @@ class PhotoListFragment : Fragment() {
             camera,
             FilesManager.FilesManager.Config(dir)
         )
-        try {
-            return@withContext filesManager.listRemoteFiles().toList()
-        } catch (e: Exception) {
-            when (e) {
-                is SocketTimeoutException,
-                is ConnectException -> {
-                    logger.severe("Failed to fetch remote files: $e")
-                    return@withContext emptyList<FileInfo>()
-                }
-                else -> {
-                    throw e
-                }
-            }
-        }
+
+        return@withContext filesManager.listRemoteFiles().toList()
     }
 
     /**

@@ -9,6 +9,6 @@
         android:id="@+id/PhotoListFragment"
         android:name="org.szymonbultrowicz.olympusphototransfer.app.photolist.PhotoListFragment"
         android:label="@string/photo_list_fragment_label"
-        tools:layout="@layout/fragment_photo_list_list">
+        tools:layout="@layout/fragment_photo_list">
     </fragment>
 </navigation>
