@@ -1,13 +1,14 @@
 package org.szymonbultrowicz.olympusphototransfer
 
+import android.content.ContentValues
 import android.content.Intent
-import android.os.Bundle
-import android.os.Environment
-import android.os.Handler
-import android.os.Looper
+import android.media.MediaScannerConnection
+import android.os.*
+import android.provider.MediaStore
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
 import kotlinx.android.synthetic.main.activity_main.*
@@ -62,14 +63,8 @@ class MainActivity : AppCompatActivity(), PhotoListFragment.OnListFragmentIntera
         val camera = CameraClient(CameraClientConfigFactory.fromPreferences(
             PreferenceManager.getDefaultSharedPreferences(applicationContext)
         ))
-        val targetDir = applicationContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-        if (targetDir == null) {
-            Toast.makeText(applicationContext, "Failed to mount target directory", Toast.LENGTH_SHORT)
-                .show()
-            return
-        }
         CoroutineScope(Dispatchers.Main).launch {
-            val f = downloadFile(item, camera, targetDir)
+            val f = downloadFile(item, camera)
             val text = if (f != null) "Photo downloaded" else "Failed to download photo"
             Toast.makeText(applicationContext, text, Toast.LENGTH_SHORT)
                 .show()
@@ -78,9 +73,25 @@ class MainActivity : AppCompatActivity(), PhotoListFragment.OnListFragmentIntera
 
     private suspend fun downloadFile(
         file: FileInfo,
-        camera: CameraClient,
-        targetDir: File
+        camera: CameraClient
     ) = withContext(Dispatchers.IO) {
-        camera.downloadFile(file, targetDir)
+        val resolver = applicationContext.contentResolver
+        val contentValues = ContentValues().apply {
+            put(MediaStore.MediaColumns.DISPLAY_NAME, file.name)
+            put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                put(MediaStore.MediaColumns.RELATIVE_PATH, "DCIM/${file.folder}")
+            }
+        }
+
+        val uri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+        if (uri != null) {
+            contentResolver.openOutputStream(uri).use {outputStream ->
+                if (outputStream != null) {
+                    camera.downloadFile(file, outputStream)
+                }
+            }
+        }
+        uri
     }
 }
