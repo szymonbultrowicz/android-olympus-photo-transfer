@@ -10,6 +10,7 @@ import java.time.ZonedDateTime
 import java.util.logging.Logger
 
 import org.szymonbultrowicz.olympusphototransfer.extensions.collections.component6
+import java.io.OutputStream
 
 class CameraClient(
     private val configuration: CameraClientConfig
@@ -44,47 +45,33 @@ class CameraClient(
         }
 
         files.forEach { file ->
-            logger.info("Detected remote file: $file (created on ${file.humanDateTime})")
+            logger.fine("Detected remote file: $file (created on ${file.humanDateTime})")
         }
 
         return files
     }
 
-    private fun setDateTime(destinationFile: File, dateTime: ZonedDateTime) {
-        if (configuration.preserveCreationDate) {
-            val epochSecs = dateTime.toEpochSecond()
-            val success = destinationFile.setLastModified(epochSecs * 1000)
-            if (!success) {
-                logger.warning("Could not setup file date for: ${destinationFile.name}")
-            }
-        }
-    }
+//    private fun setDateTime(destinationFile: File, dateTime: ZonedDateTime) {
+//        if (configuration.preserveCreationDate) {
+//            val epochSecs = dateTime.toEpochSecond()
+//            val success = destinationFile.setLastModified(epochSecs * 1000)
+//            if (!success) {
+//                logger.warning("Could not setup file date for: ${destinationFile.name}")
+//            }
+//        }
+//    }
 
     /**
      * Downloads a specific file
      *
      * @param file the remote file information
-     * @param localTargetDirectory the target local directory
+     * @param outputStream out target file output stream
      * @return Downloaded local file
      */
-    fun downloadFile(file: FileInfo, localTargetDirectory: File): File? {
+    fun downloadFile(file: FileInfo, outputStream: OutputStream) {
         val urlSourceFile = configuration.fileUrl(baseDirFileUrl(configuration.serverBaseUrl, file.folder, file.name))
-        val inputStream = urlSourceFile.openStream()
-        return try {
-            val channel = Channels.newChannel(inputStream)
-            val localDirectory = File (localTargetDirectory, file.folder)
-            if (!localDirectory.exists()) {
-                localDirectory.mkdirs()
-            }
-            val destinationFile = File (localDirectory, file.name)
-            val outputStream = FileOutputStream (destinationFile)
-            outputStream.channel.transferFrom(channel, 0, Long.MAX_VALUE)
-            setDateTime(destinationFile, file.humanDateTime.atZone(configuration.zoneOffset))
-            destinationFile.absoluteFile
-        } catch (e: Exception) {
-            null
-        } finally {
-            inputStream.close()
+        urlSourceFile.openStream().use { inputStream ->
+            inputStream.copyTo(outputStream)
         }
     }
 

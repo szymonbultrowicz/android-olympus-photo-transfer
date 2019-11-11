@@ -69,40 +69,40 @@ class FilesManager(
         }
     }
 
-    /**
-     * Synchronize remote files with local files.
-     * Synchronization is one-way (remote to local).
-     *
-     * @return result of the synchronization
-     */
-    fun sync(): Sequence<File?>
-    {
-        return syncPlan().map { syncPlanItem ->
-            logger.info("Downloading ${syncPlanItem.index.i + 1} / ${syncPlanItem.index.total}...")
-            syncFile(syncPlanItem)
-        }
-    }
+//    /**
+//     * Synchronize remote files with local files.
+//     * Synchronization is one-way (remote to local).
+//     *
+//     * @return result of the synchronization
+//     */
+//    fun sync(): Sequence<File?>
+//    {
+//        return syncPlan().map { syncPlanItem ->
+//            logger.info("Downloading ${syncPlanItem.index.i + 1} / ${syncPlanItem.index.total}...")
+//            syncFile(syncPlanItem)
+//        }
+//    }
 
-    /**
-     * Synchronize a single file based on the synchronization plan item of
-     * it (local status, remote status, file info, etc.).
-     *
-     * @param syncPlanItem item in the synchronization plan
-     * @return the local result of the synchronization
-     */
-    fun syncFile(syncPlanItem: SyncPlanItem): File? {
-        return when (syncPlanItem.downloadStatus) {
-            SyncPlanItem.DownloadedStatus.Downloaded,
-            SyncPlanItem.DownloadedStatus.OnlyLocal -> {
-                logger.fine("Skipping file ${syncPlanItem.fileInfo} as it's been already downloaded")
-                null
-            }
-            else -> {
-                logger.fine("Downloading file ${syncPlanItem.fileInfo} to ${config.outputDir} (previous status ${syncPlanItem.downloadStatus})")
-                api.downloadFile(syncPlanItem.fileInfo, config.outputDir)
-            }
-        }
-    }
+//    /**
+//     * Synchronize a single file based on the synchronization plan item of
+//     * it (local status, remote status, file info, etc.).
+//     *
+//     * @param syncPlanItem item in the synchronization plan
+//     * @return the local result of the synchronization
+//     */
+//    fun syncFile(syncPlanItem: SyncPlanItem): File? {
+//        return when (syncPlanItem.downloadStatus) {
+//            SyncPlanItem.DownloadedStatus.Downloaded,
+//            SyncPlanItem.DownloadedStatus.OnlyLocal -> {
+//                logger.fine("Skipping file ${syncPlanItem.fileInfo} as it's been already downloaded")
+//                null
+//            }
+//            else -> {
+//                logger.fine("Downloading file ${syncPlanItem.fileInfo} to ${config.outputDir} (previous status ${syncPlanItem.downloadStatus})")
+//                api.downloadFile(syncPlanItem.fileInfo, config.outputDir)
+//            }
+//        }
+//    }
 
     /**
      * Tell if the camera is reachable.
