@@ -10,7 +10,7 @@ import org.szymonbultrowicz.olympusphototransfer.R
 
 import org.szymonbultrowicz.olympusphototransfer.app.photolist.PhotoListFragment.OnListFragmentInteractionListener
 
-import kotlinx.android.synthetic.main.fragment_photo_list.view.*
+import kotlinx.android.synthetic.main.fragment_photo_item.view.*
 import org.szymonbultrowicz.olympusphototransfer.lib.client.FileInfo
 
 /**
@@ -36,14 +36,14 @@ class MyItemRecyclerViewAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.fragment_photo_list, parent, false)
+            .inflate(R.layout.fragment_photo_item, parent, false)
         return ViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = mValues[position]
         holder.mIdView.text = item.name
-        holder.mContentView.text = item.humanDate.toString()
+        holder.mContentView.text = "${item.humanDate} ${item.humanTime}"
 
         with(holder.mView) {
             tag = item
