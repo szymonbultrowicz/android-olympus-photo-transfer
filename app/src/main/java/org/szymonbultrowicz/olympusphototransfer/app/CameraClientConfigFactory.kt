@@ -7,7 +7,11 @@ import java.net.URL
 class CameraClientConfigFactory {
     companion object {
         fun fromPreferences(prefs: SharedPreferences): CameraClientConfig {
-            val url = URL(prefs.getString("connection_address", "http://192.168.0.10/DCIM"))
+            val url = URL(
+                ensureProtocol(
+                    prefs.getString("connection_address", "http://192.168.0.10/DCIM")!!
+                )
+            )
             return CameraClientConfig(
                 url.protocol,
                 url.host,

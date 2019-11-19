@@ -3,8 +3,11 @@ package org.szymonbultrowicz.olympusphototransfer.app
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.preference.EditTextPreference
 import androidx.preference.PreferenceFragmentCompat
 import org.szymonbultrowicz.olympusphototransfer.R
+import java.net.URI
+import java.net.URISyntaxException
 
 class SettingsActivity : AppCompatActivity() {
 
@@ -29,8 +32,22 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     class SettingsFragment : PreferenceFragmentCompat() {
+
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey)
+
+            preferenceScreen.findPreference<EditTextPreference>("connection_address")
+                ?.setOnPreferenceChangeListener { _, newValue ->
+                    when(newValue) {
+                        !is String -> false
+                        null -> false
+                        else -> try {
+                                URI(ensureProtocol(newValue)).host != null
+                            } catch (e: URISyntaxException) {
+                                false
+                            }
+                    }
+                }
         }
     }
 }
