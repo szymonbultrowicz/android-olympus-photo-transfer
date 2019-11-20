@@ -4,7 +4,10 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
+import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
 import org.szymonbultrowicz.olympusphototransfer.R
 
 
@@ -20,6 +23,7 @@ import org.szymonbultrowicz.olympusphototransfer.lib.client.FileInfo
  */
 class MyItemRecyclerViewAdapter(
     private var mValues: List<FileInfo>,
+    private val fragment: Fragment,
     private val mListener: OnListFragmentInteractionListener?
 ) : RecyclerView.Adapter<MyItemRecyclerViewAdapter.ViewHolder>() {
 
@@ -43,7 +47,11 @@ class MyItemRecyclerViewAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = mValues[position]
         holder.mIdView.text = item.name
-        holder.mContentView.text = "${item.humanDate} ${item.humanTime}"
+//        holder.mContentView.text = "${item.humanDate} ${item.humanTime}"
+        Glide.with(fragment)
+            .load(item.thumbnailUrl.toString())
+            .into(holder.mImageView)
+
 
         with(holder.mView) {
             tag = item
@@ -60,10 +68,11 @@ class MyItemRecyclerViewAdapter(
 
     inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
         val mIdView: TextView = mView.item_number
-        val mContentView: TextView = mView.content
+//        val mContentView: TextView = mView.content
+        val mImageView: ImageView = mView.thumbnail
 
-        override fun toString(): String {
-            return super.toString() + " '" + mContentView.text + "'"
-        }
+//        override fun toString(): String {
+//            return super.toString() + " '" + mContentView.text + "'"
+//        }
     }
 }

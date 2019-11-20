@@ -110,15 +110,15 @@ class FilesManager(
      */
     fun isRemoteConnected(): Boolean = api.isConnected()
 
+    data class Config(
+        val outputDir: File,
+        val mediaFilter: FileInfoFilter.Criteria = FileInfoFilter.Criteria.Bypass
+    )
+
     companion object FilesManager {
 
         private val logger = Logger.getLogger(FilesManager::class.toString())
 
         val DirectoriesFilter = { f: File -> f.isDirectory }
-
-        data class Config(
-            val outputDir: File,
-            val mediaFilter: FileInfoFilter.Criteria = FileInfoFilter.Criteria.Bypass
-        )
     }
 }

@@ -68,7 +68,7 @@ var b = wlansd[i].split(",");
 var name = b[1];
 var ext = name.split(".");
 if( !(b[3] & 0x10) ){
-if(( ext[1] == "JPG" )||(ext[1] == "ORF")||(ext[1] == "MPO")||(ext[1] == "MOV")||(ext[1] == "AVI")){icon[i] = b[0]+"/"+name;}
+if(( ext[1] == "JPG" )||(ext[1] == "ORF")||(ext[1] == "MPO")||(ext[1] == "MOV")||(ext[1] == "AVI")){icon[i] = "/get_thumbnail.cgi?DIR="+b[0]+"/"+name;}
 else{icon[i] = "";}
 }
 else{
