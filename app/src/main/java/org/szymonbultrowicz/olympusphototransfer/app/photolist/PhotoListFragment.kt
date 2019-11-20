@@ -33,7 +33,7 @@ class PhotoListFragment : Fragment() {
 
     private val logger = Logger.getLogger(PhotoListFragment::class.java.name)
 
-    private var columnCount = 1
+    private var columnCount = 2
 
     private var listener: OnListFragmentInteractionListener? = null
 
@@ -59,6 +59,7 @@ class PhotoListFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_photo_list, container, false)
 
+        val fragment = this
         // Set the adapter
         if (view is RecyclerView) {
             with(view) {
@@ -68,6 +69,7 @@ class PhotoListFragment : Fragment() {
                 }
                 myAdapter = MyItemRecyclerViewAdapter(
                     emptyList(),
+                    fragment,
                     listener
                 )
                 adapter = myAdapter
@@ -140,7 +142,7 @@ class PhotoListFragment : Fragment() {
 
         val filesManager = FilesManager(
             camera,
-            FilesManager.FilesManager.Config(dir)
+            FilesManager.Config(dir)
         )
 
         return@withContext filesManager.listRemoteFiles().toList()

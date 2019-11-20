@@ -1,16 +1,10 @@
 package org.szymonbultrowicz.olympusphototransfer.lib.client
 
-import java.io.File
-import java.io.FileOutputStream
-import java.lang.Exception
-import java.net.URL
-import java.nio.channels.Channels
-import java.nio.charset.StandardCharsets
-import java.time.ZonedDateTime
-import java.util.logging.Logger
-
 import org.szymonbultrowicz.olympusphototransfer.extensions.collections.component6
 import java.io.OutputStream
+import java.net.URL
+import java.nio.charset.StandardCharsets
+import java.util.logging.Logger
 
 class CameraClient(
     private val configuration: CameraClientConfig
@@ -26,9 +20,9 @@ class CameraClient(
         val rootUrl = baseDirFileUrl(configuration.serverBaseUrl)
         val rootHtmlLines = httpGetAsString(rootUrl)
 
-        logger.info("Html root begin ($rootUrl)")
-        rootHtmlLines.forEach { line -> logger.info(line) }
-        logger.info("Html root end")
+//        logger.info("Html root begin ($rootUrl)")
+//        rootHtmlLines.forEach { line -> logger.info(line) }
+//        logger.info("Html root end")
 
         val remoteDirs = dirsFromRootHtml(rootHtmlLines)
 
@@ -37,9 +31,9 @@ class CameraClient(
         val files = remoteDirs.flatMap { dir ->
             val dirUrl = baseDirFileUrl(configuration.serverBaseUrl, dir)
             val dirHtmlLines = httpGetAsString(dirUrl)
-            logger.info("Html for directory begin ($dirUrl / $dir)")
-            dirHtmlLines.forEach { line -> logger.info(line) }
-            logger.info("Html for directory end\n")
+//            logger.info("Html for directory begin ($dirUrl / $dir)")
+//            dirHtmlLines.forEach { line -> logger.info(line) }
+//            logger.info("Html for directory end\n")
             val f = filesFromDirHtml(dirHtmlLines, dir)
             f
         }
