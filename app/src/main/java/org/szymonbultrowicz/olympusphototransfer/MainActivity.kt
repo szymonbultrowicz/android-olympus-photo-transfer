@@ -21,7 +21,10 @@ import org.szymonbultrowicz.olympusphototransfer.app.SettingsActivity
 import org.szymonbultrowicz.olympusphototransfer.app.photolist.PhotoListFragment
 import org.szymonbultrowicz.olympusphototransfer.lib.client.CameraClient
 import org.szymonbultrowicz.olympusphototransfer.lib.client.FileInfo
+import org.szymonbultrowicz.olympusphototransfer.lib.exceptions.PhotoDownloadException
 import java.io.File
+import java.lang.Exception
+import java.util.logging.Level
 import java.util.logging.Logger
 
 class MainActivity : AppCompatActivity(), PhotoListFragment.OnListFragmentInteractionListener {
@@ -85,13 +88,29 @@ class MainActivity : AppCompatActivity(), PhotoListFragment.OnListFragmentIntera
         }
 
         val uri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
-        if (uri != null) {
-            contentResolver.openOutputStream(uri).use {outputStream ->
-                if (outputStream != null) {
-                    camera.downloadFile(file, outputStream)
+
+        try {
+            if (uri != null) {
+                contentResolver.openOutputStream(uri).use { outputStream ->
+                    if (outputStream != null) {
+                        camera.downloadFile(file, outputStream)
+                    }
                 }
             }
+            uri
+        } catch (e: PhotoDownloadException) {
+            showError(e)
+            if (uri != null) {
+                resolver.delete(uri, null, null)
+            }
+            null
         }
-        uri
+    }
+
+    private fun showError(e: Exception) {
+        val text = "Failed to download photo"
+        logger.log(Level.SEVERE, text, e)
+        Toast.makeText(applicationContext, text, Toast.LENGTH_SHORT)
+            .show()
     }
 }
