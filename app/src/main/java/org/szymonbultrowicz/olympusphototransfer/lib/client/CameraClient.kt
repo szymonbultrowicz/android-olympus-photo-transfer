@@ -1,6 +1,7 @@
 package org.szymonbultrowicz.olympusphototransfer.lib.client
 
 import org.szymonbultrowicz.olympusphototransfer.extensions.collections.component6
+import org.szymonbultrowicz.olympusphototransfer.lib.exceptions.PhotoDownloadException
 import java.io.OutputStream
 import java.net.URL
 import java.nio.charset.StandardCharsets
@@ -64,8 +65,12 @@ class CameraClient(
      */
     fun downloadFile(file: FileInfo, outputStream: OutputStream) {
         val urlSourceFile = configuration.fileUrl(baseDirFileUrl(configuration.serverBaseUrl, file.folder, file.name))
-        urlSourceFile.openStream().use { inputStream ->
-            inputStream.copyTo(outputStream)
+        try {
+            urlSourceFile.openStream().use { inputStream ->
+                inputStream.copyTo(outputStream)
+            }
+        } catch (e: Exception) {
+            throw PhotoDownloadException(e)
         }
     }
 

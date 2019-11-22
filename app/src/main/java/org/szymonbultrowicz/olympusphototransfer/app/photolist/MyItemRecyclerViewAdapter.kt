@@ -46,7 +46,7 @@ class MyItemRecyclerViewAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = mValues[position]
-        holder.mIdView.text = item.name
+//        holder.mIdView.text = item.name
 //        holder.mContentView.text = "${item.humanDate} ${item.humanTime}"
         Glide.with(fragment)
             .load(item.thumbnailUrl.toString())
@@ -67,7 +67,7 @@ class MyItemRecyclerViewAdapter(
     }
 
     inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
-        val mIdView: TextView = mView.item_number
+//        val mIdView: TextView = mView.item_number
 //        val mContentView: TextView = mView.content
         val mImageView: ImageView = mView.thumbnail
 
