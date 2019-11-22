@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -43,11 +44,11 @@ class MyItemRecyclerViewAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = mValues[position]
-//        holder.mIdView.text = item.name
-//        holder.mContentView.text = "${item.humanDate} ${item.humanTime}"
+        holder.mNameView.text = item.name
+        holder.mDateTakenView.text = item.dateTaken.toString()
         Glide.with(fragment)
             .load(item.thumbnailUrl.toString())
-            .into(holder.mImageView)
+            .into(holder.mThumbnailView)
 
 
         with(holder.mView) {
@@ -64,8 +65,8 @@ class MyItemRecyclerViewAdapter(
     }
 
     inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
-//        val mIdView: TextView = mView.item_number
-//        val mContentView: TextView = mView.content
-        val mImageView: ImageView = mView.thumbnail
+        val mNameView: TextView = mView.photo_name
+        val mDateTakenView: TextView = mView.photo_date
+        val mThumbnailView: ImageView = mView.thumbnail
     }
 }
