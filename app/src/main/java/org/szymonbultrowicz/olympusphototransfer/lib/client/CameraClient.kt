@@ -21,10 +21,6 @@ class CameraClient(
         val rootUrl = baseDirFileUrl(configuration.serverBaseUrl)
         val rootHtmlLines = httpGetAsString(rootUrl)
 
-//        logger.info("Html root begin ($rootUrl)")
-//        rootHtmlLines.forEach { line -> logger.info(line) }
-//        logger.info("Html root end")
-
         val remoteDirs = dirsFromRootHtml(rootHtmlLines)
 
         remoteDirs.forEach { folder -> logger.info("Detected remote folder: $folder") }
@@ -32,29 +28,26 @@ class CameraClient(
         val files = remoteDirs.flatMap { dir ->
             val dirUrl = baseDirFileUrl(configuration.serverBaseUrl, dir)
             val dirHtmlLines = httpGetAsString(dirUrl)
-//            logger.info("Html for directory begin ($dirUrl / $dir)")
-//            dirHtmlLines.forEach { line -> logger.info(line) }
-//            logger.info("Html for directory end\n")
             val f = filesFromDirHtml(dirHtmlLines, dir)
             f
         }
 
         files.forEach { file ->
-            logger.fine("Detected remote file: $file (created on ${file.humanDateTime})")
+            logger.fine("Detected remote file: $file (created on ${file.dateTaken})")
         }
 
         return files
     }
 
-//    private fun setDateTime(destinationFile: File, dateTime: ZonedDateTime) {
-//        if (configuration.preserveCreationDate) {
-//            val epochSecs = dateTime.toEpochSecond()
-//            val success = destinationFile.setLastModified(epochSecs * 1000)
-//            if (!success) {
-//                logger.warning("Could not setup file date for: ${destinationFile.name}")
-//            }
-//        }
-//    }
+    /**
+     * Lists all remote photos (files grouped by the name)
+     */
+    fun listPhotos(): List<PhotoInfo> {
+        val files = listFiles()
+        return files.groupBy { it.baseFileName }
+            .values
+            .map { PhotoInfo(it.toSet()) }
+    }
 
     /**
      * Downloads a specific file
@@ -167,6 +160,7 @@ class CameraClient(
      */
     private fun filesFromDirHtml(dirHtmlLines: List<String>, fileDir: String): List<FileInfo> {
         val fileRegex = configuration.fileRegex.toRegex()
+        val binaryDateConverter = BinaryDateConverter()
         val fileIdsAndSize = dirHtmlLines.flatMap { htmlLineToBeParsed ->
             when {
                 fileRegex.containsMatchIn(htmlLineToBeParsed) -> {
@@ -178,14 +172,13 @@ class CameraClient(
                                 fileDir,
                                 fileName,
                                 fileSizeBytes.toLong(),
-                                date.toInt(),
-                                time.toInt(),
+                                binaryDateConverter.binaryToDateTime(date.toInt(), time.toInt()),
                                 thumbnail
                             )
                         }
                         .toList()
                 }
-                else -> emptyList<FileInfo>()
+                else -> emptyList()
             }
         }
 

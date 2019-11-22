@@ -21,6 +21,7 @@ import org.szymonbultrowicz.olympusphototransfer.app.SettingsActivity
 import org.szymonbultrowicz.olympusphototransfer.app.photolist.PhotoListFragment
 import org.szymonbultrowicz.olympusphototransfer.lib.client.CameraClient
 import org.szymonbultrowicz.olympusphototransfer.lib.client.FileInfo
+import org.szymonbultrowicz.olympusphototransfer.lib.client.PhotoInfo
 import org.szymonbultrowicz.olympusphototransfer.lib.exceptions.PhotoDownloadException
 import java.io.File
 import java.lang.Exception
@@ -56,21 +57,25 @@ class MainActivity : AppCompatActivity(), PhotoListFragment.OnListFragmentIntera
         }
     }
 
-    override fun onListFragmentInteraction(item: FileInfo?) {
+    override fun onListFragmentInteraction(item: PhotoInfo?) {
         if (item == null) {
             return
         }
-        Toast.makeText(applicationContext, "Started downloading the file", Toast.LENGTH_SHORT)
+        Toast.makeText(applicationContext, "Started downloading ${item.files.size} file(s) of ${item.name}", Toast.LENGTH_SHORT)
             .show()
 
         val camera = CameraClient(CameraClientConfigFactory.fromPreferences(
             PreferenceManager.getDefaultSharedPreferences(applicationContext)
         ))
-        CoroutineScope(Dispatchers.Main).launch {
-            val f = downloadFile(item, camera)
-            val text = if (f != null) "Photo downloaded" else "Failed to download photo"
-            Toast.makeText(applicationContext, text, Toast.LENGTH_SHORT)
-                .show()
+        item.files.forEach { fileInfo ->
+            CoroutineScope(Dispatchers.Main).launch {
+                val f = downloadFile(fileInfo, camera)
+                val text = if (f != null)
+                    "File ${fileInfo.name} downloaded"
+                    else "Failed to download ${fileInfo.name}"
+                Toast.makeText(applicationContext, text, Toast.LENGTH_SHORT)
+                    .show()
+            }
         }
     }
 

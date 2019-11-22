@@ -3,18 +3,20 @@ package org.szymonbultrowicz.olympusphototransfer.lib.client
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
-import org.szymonbultrowicz.olympusphototransfer.TestHelper
-import java.io.File
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.*
+import java.io.OutputStream
 import java.net.URL
 import java.nio.file.Paths
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.ZoneId
-import java.time.ZonedDateTime
 
 class CameraClientSpec {
 
     private val ParisZone = ZoneId.of("Europe/Paris")
-    private val ADateTime = ZonedDateTime.of(2015, 9, 21, 21, 16, 21, 0, ParisZone)
-    private val ServerBaseUrl = "src/test/resources/org/szymonbultrowicz/olympusphototransfer/client/"
+    private val ServerBaseUrl = "src/test/resources/org/szymonbultrowicz/olympusphototransfer/lib//client/"
 
     private val DefaultCameraClientConfig = CameraClientConfig(
         serverProtocol = "file",
@@ -65,25 +67,23 @@ class CameraClientSpec {
         )
 
         // wlansd[0]="/DCIM/100OLYMP/,OR.ORF,15441739,0,18229,43541";
-        val remoteFiles = cc.listFiles()
+            val remoteFiles = cc.listFiles()
         assertEquals(1, remoteFiles.size)
         assertEquals("100OLYMP", remoteFiles[0].folder)
         assertEquals("OR.ORF", remoteFiles[0].name)
         assertEquals(15441739L, remoteFiles[0].size)
-        assertEquals(18229, remoteFiles[0].date)
-        assertEquals(43541, remoteFiles[0].time)
+        assertEquals(LocalDateTime.of(
+            LocalDate.of(2015, 9, 21),
+            LocalTime.of(21, 16, 21)
+        ), remoteFiles[0].dateTaken)
         assertNotNull(remoteFiles[0].thumbnailUrl)
 
-        val outputDirectory = TestHelper.createTmpDir("output")
+        val outStreamMock = mock(OutputStream::class.java)
 
-        val downloaded = cc.downloadFile(remoteFiles[0], outputDirectory)
+        val downloaded = cc.downloadFile(remoteFiles[0], outStreamMock)
         assertNotNull(downloaded)
 
-        val downloadedFileToCheck = File(File(outputDirectory, "100OLYMP"), "OR.ORF")
-
-        assertEquals(true, downloadedFileToCheck.exists())
-
-        downloadedFileToCheck.deleteOnExit()
+        verify(outStreamMock).write(any(ByteArray::class.java), anyInt(), anyInt())
     }
 
     fun generateClientCameraConfig(rootHtmlName: String, mapping: (URL) -> URL): CameraClientConfig {
