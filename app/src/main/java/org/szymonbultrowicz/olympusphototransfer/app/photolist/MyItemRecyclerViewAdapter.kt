@@ -1,20 +1,17 @@
 package org.szymonbultrowicz.olympusphototransfer.app.photolist
 
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import org.szymonbultrowicz.olympusphototransfer.R
-
-
-import org.szymonbultrowicz.olympusphototransfer.app.photolist.PhotoListFragment.OnListFragmentInteractionListener
-
 import kotlinx.android.synthetic.main.fragment_photo_item.view.*
+import org.szymonbultrowicz.olympusphototransfer.R
+import org.szymonbultrowicz.olympusphototransfer.app.photolist.PhotoListFragment.OnListFragmentInteractionListener
 import org.szymonbultrowicz.olympusphototransfer.lib.client.FileInfo
+import org.szymonbultrowicz.olympusphototransfer.lib.client.PhotoInfo
 
 /**
  * [RecyclerView.Adapter] that can display a [FileInfo] and makes a call to the
@@ -22,7 +19,7 @@ import org.szymonbultrowicz.olympusphototransfer.lib.client.FileInfo
  * TODO: Replace the implementation with code for your data type.
  */
 class MyItemRecyclerViewAdapter(
-    private var mValues: List<FileInfo>,
+    private var mValues: List<PhotoInfo>,
     private val fragment: Fragment,
     private val mListener: OnListFragmentInteractionListener?
 ) : RecyclerView.Adapter<MyItemRecyclerViewAdapter.ViewHolder>() {
@@ -31,7 +28,7 @@ class MyItemRecyclerViewAdapter(
 
     init {
         mOnClickListener = View.OnClickListener { v ->
-            val item = v.tag as FileInfo
+            val item = v.tag as PhotoInfo
             // Notify the active callbacks interface (the activity, if the fragment is attached to
             // one) that an item has been selected.
             mListener?.onListFragmentInteraction(item)
@@ -61,7 +58,7 @@ class MyItemRecyclerViewAdapter(
 
     override fun getItemCount(): Int = mValues.size
 
-    fun updateData(data: List<FileInfo>) {
+    fun updateData(data: List<PhotoInfo>) {
         mValues = data
         notifyDataSetChanged()
     }
@@ -70,9 +67,5 @@ class MyItemRecyclerViewAdapter(
 //        val mIdView: TextView = mView.item_number
 //        val mContentView: TextView = mView.content
         val mImageView: ImageView = mView.thumbnail
-
-//        override fun toString(): String {
-//            return super.toString() + " '" + mContentView.text + "'"
-//        }
     }
 }

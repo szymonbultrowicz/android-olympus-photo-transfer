@@ -2,7 +2,6 @@ package org.szymonbultrowicz.olympusphototransfer.app.photolist
 
 import android.content.Context
 import android.os.Bundle
-import android.os.Environment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,8 +15,7 @@ import kotlinx.coroutines.*
 import org.szymonbultrowicz.olympusphototransfer.R
 import org.szymonbultrowicz.olympusphototransfer.app.CameraClientConfigFactory
 import org.szymonbultrowicz.olympusphototransfer.lib.client.CameraClient
-import org.szymonbultrowicz.olympusphototransfer.lib.client.FileInfo
-import org.szymonbultrowicz.olympusphototransfer.lib.sync.FilesManager
+import org.szymonbultrowicz.olympusphototransfer.lib.client.PhotoInfo
 import java.lang.Exception
 import java.net.ConnectException
 import java.net.SocketTimeoutException
@@ -105,7 +103,7 @@ class PhotoListFragment : Fragment() {
                 createCameraClient()
             )
             /// TODO: improve sort
-            val sortedFiles = files.sortedByDescending { it.humanDateTime.atZone(ZoneOffset.UTC).toEpochSecond() }
+            val sortedFiles = files.sortedByDescending { it.dateTaken.atZone(ZoneOffset.UTC).toEpochSecond() }
             myAdapter?.updateData(sortedFiles)
         } catch (e: Exception) {
             when (e) {
@@ -130,22 +128,15 @@ class PhotoListFragment : Fragment() {
         ))
     }
 
-    private suspend fun fetchCameraFiles(camera: CameraClient?): List<FileInfo> = withContext(Dispatchers.IO) {
+    private suspend fun fetchCameraFiles(camera: CameraClient?): List<PhotoInfo> = withContext(Dispatchers.IO) {
         if (camera == null) {
             logger.warning("Camera object empty in onResume step")
-            return@withContext emptyList<FileInfo>()
+            return@withContext emptyList<PhotoInfo>()
         }
 
         logger.info("Fetching camera files")
-        val dir = context?.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-            ?: return@withContext emptyList<FileInfo>()
 
-        val filesManager = FilesManager(
-            camera,
-            FilesManager.Config(dir)
-        )
-
-        return@withContext filesManager.listRemoteFiles().toList()
+        return@withContext camera.listPhotos()
     }
 
     /**
@@ -161,7 +152,7 @@ class PhotoListFragment : Fragment() {
      */
     interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        fun onListFragmentInteraction(item: FileInfo?)
+        fun onListFragmentInteraction(item: PhotoInfo?)
     }
 
     companion object {
