@@ -102,21 +102,26 @@ class PhotoListFragment : Fragment() {
             val files = fetchCameraFiles(
                 createCameraClient()
             )
-            /// TODO: improve sort
             val sortedFiles = files.sortedByDescending { it.dateTaken.atZone(ZoneOffset.UTC).toEpochSecond() }
             myAdapter?.updateData(sortedFiles)
         } catch (e: Exception) {
-            when (e) {
-                is SocketTimeoutException,
-                is ConnectException -> {
-                    Toast.makeText(context, "Failed to connect to the camera", Toast.LENGTH_SHORT)
-                        .show()
-                    logger.warning("Failed to connec to the camera $e")
-                }
-                else -> {
-                    Toast.makeText(context, "Unknown error: $e", Toast.LENGTH_SHORT)
-                        .show()
-                    logger.severe("Unknown error $e")
+            CoroutineScope(Dispatchers.Main).launch {
+                when (e) {
+                    is SocketTimeoutException,
+                    is ConnectException -> {
+                        Toast.makeText(
+                            context,
+                            "Failed to connect to the camera",
+                            Toast.LENGTH_LONG
+                        )
+                            .show()
+                        logger.warning("Failed to connec to the camera $e")
+                    }
+                    else -> {
+                        Toast.makeText(context, "Unknown error: $e", Toast.LENGTH_LONG)
+                            .show()
+                        logger.severe("Unknown error $e")
+                    }
                 }
             }
         }
