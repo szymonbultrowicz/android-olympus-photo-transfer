@@ -137,6 +137,7 @@ class PhotoListFragment : Fragment() {
         logger.info("Fetching camera files")
 
         return@withContext camera.listPhotos()
+            .sortedByDescending { it.dateTaken }
     }
 
     /**
