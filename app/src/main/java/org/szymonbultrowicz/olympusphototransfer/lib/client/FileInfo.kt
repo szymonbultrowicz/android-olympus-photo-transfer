@@ -13,4 +13,9 @@ data class FileInfo (
 ) : BasePhotoInfo {
     val baseFileName = name.substringBeforeLast('.')
     val extension = name.substringAfterLast('.').toLowerCase(Locale.getDefault())
+    val mediaType = when (extension) {
+        "jpg" -> "image/jpeg"
+        "orf" -> "image/x-olympus-orf"
+        else -> "application/octet-stream"
+    }
 }
