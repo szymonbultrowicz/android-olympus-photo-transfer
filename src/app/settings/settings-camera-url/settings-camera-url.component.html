@@ -1,0 +1,40 @@
+<ActionBar title="Settings">
+    <NavigationButton
+            icon="font://&#xf060;"
+            class="fas"
+            (tap)="goBack()"
+    ></NavigationButton>
+</ActionBar>
+<ScrollView>
+    <StackLayout class="nt-form">
+        <StackLayout class="nt-input">
+            <Label text="Protocol"></Label>
+            <DropDown
+                    [items]="cameraConfigService.availableProtocols"
+                    [ngModel]="selectedProto"
+                    (selectedIndexChanged)="proto = cameraConfigService.availableProtocols[$event.newIndex]"
+            ></DropDown>
+        </StackLayout>
+        <StackLayout class="nt-input">
+            <Label text="Hostname/IP address"></Label>
+            <TextField
+                    [text]="hostname"
+                    (textChange)="hostname = $event.value"
+            ></TextField>
+        </StackLayout>
+        <StackLayout class="nt-input">
+            <Label text="Port"></Label>
+            <TextField hint="Default for protocol"
+                       [text]="port"
+                       keyboardType="number"
+                       returnKeyType="done"
+                       (textChange)="port = $event.value"></TextField>
+        </StackLayout>
+        <StackLayout class="nt-input">
+            <Label text="Path"></Label>
+            <TextField
+                    [text]="path"
+                    (textChange)="path = $event.value"></TextField>
+        </StackLayout>
+    </StackLayout>
+</ScrollView>

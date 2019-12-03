@@ -1,0 +1,14 @@
+<ActionBar title="Settings">
+  <NavigationButton
+    icon="font://&#xf060;"
+    class="fas"
+    (tap)="goBack()"
+  ></NavigationButton>
+</ActionBar>
+<StackLayout class="container">
+  <ns-settings-entry
+    label="Camera URL"
+    [currentValue]="cameraConfigService.cameraUrl"
+    (tap)="onCameraUrl()"
+  ></ns-settings-entry>
+</StackLayout>

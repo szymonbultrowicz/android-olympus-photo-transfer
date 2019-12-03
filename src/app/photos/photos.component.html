@@ -1,0 +1,15 @@
+<ActionBar title="Olympus Photo Transfer">
+    <ActionItem
+            text="Settings"
+            class="fas"
+            ios.position="popup"
+            android.position="popup"
+            [nsRouterLink]="['/settings']"
+    ></ActionItem>
+</ActionBar>
+<ActivityIndicator [busy]="state === states.INITIAL_LOADING"></ActivityIndicator>
+<PullToRefresh (refresh)="refreshList($event)">
+    <StackLayout *ngIf="state === states.CONNECTION_ERROR">
+        <Label text="Failed to connect to the camera"></Label>
+    </StackLayout>
+</PullToRefresh>

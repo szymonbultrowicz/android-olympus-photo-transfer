@@ -1,0 +1,6 @@
+<Ripple (tap)="tap()">
+  <StackLayout class="container">
+    <Label [text]="label" class="label"></Label>
+    <Label *ngIf="currentValue" [text]="currentValue" class="value"></Label>
+  </StackLayout>
+</Ripple>
