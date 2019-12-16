@@ -13,15 +13,21 @@
         <Label text="Failed to connect to the camera"></Label>
     </StackLayout>
     <ScrollView *ngIf="state === states.LOADED">
-        <WrapLayout>
-            <GridLayout class="tile-container" *ngFor="let file of files">
-                <MDCardView class="tile">
-                    <StackLayout>
-                        <Image [src]="file.thumbnailUrl" loadMode="async" stretch="aspectFit"></Image>
-                        <Label [text]="file.name"></Label>
-                    </StackLayout>
-                </MDCardView>
-            </GridLayout>
-        </WrapLayout>
+        <StackLayout *ngFor="let group of fileGroups" class="group-container">
+            <Label [text]="formatDate(group.date)" class="group-title"></Label>
+            <WrapLayout>
+                <GridLayout class="tile-container" *ngFor="let file of group.files">
+                    <MDCardView class="tile">
+                        <StackLayout>
+                            <Image [src]="file.thumbnailUrl" loadMode="async" stretch="aspectFit"></Image>
+                            <FlexboxLayout justifyContent="space-between" class="image-description">
+                                <Label [text]="file.name"></Label>
+                                <Label [text]="formatTime(file.dateTaken)"></Label>
+                            </FlexboxLayout>
+                        </StackLayout>
+                    </MDCardView>
+                </GridLayout>
+            </WrapLayout>
+        </StackLayout>
     </ScrollView>
 </PullToRefresh>

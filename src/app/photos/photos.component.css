@@ -9,3 +9,18 @@
 Image {
     height: 100px;
 }
+
+.image-description {
+    width: 100%;
+    padding: 4px 8px;
+}
+
+.group-title {
+    margin-left: 16px;
+    font-size: 14sp;
+    font-weight: bold;
+}
+
+.group-container {
+    margin-top: 8px;
+}

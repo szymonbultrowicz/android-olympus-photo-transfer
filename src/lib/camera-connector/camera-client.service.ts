@@ -1,11 +1,12 @@
-import {cloneDeep, flatten} from 'lodash';
-import {Injectable, ComponentFactoryResolver} from '@angular/core';
+import {flatten, groupBy} from 'lodash';
+import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {map, catchError, timeout, switchMap, tap} from 'rxjs/operators';
+import {map, catchError, timeout, switchMap} from 'rxjs/operators';
 import {retrieveDirectories, retrieveFiles} from './html-response-parser';
 import {CameraConnectionException} from './exceptions/camera-connection-exception';
-import {zip, forkJoin} from 'rxjs';
+import {forkJoin} from 'rxjs';
 import {CameraConfigService} from '../camera-config/camera-config.service';
+import {PhotoInfo} from '~/lib/camera-connector/photo-info';
 
 @Injectable({
     providedIn: 'root',
@@ -27,12 +28,14 @@ export class CameraClientService {
                         this.queryCamera(`${dir}/`).pipe(
                             map(html => retrieveFiles(dir, html, (name: string) =>
                                 this.cameraConfigService.buildThumbnailUrl(dir, name)
-                            ))
+                            )),
                         )
                     )
                 )
             ),
-            map(htmls => flatten(htmls))
+            map(htmls => flatten(htmls)),
+            map(files => Object.values(groupBy(files, f => `${f.directory}/${f.baseFileName}`))),
+            map(groupedFiles => groupedFiles.map(files => new PhotoInfo(files)))
         );
     }
 
