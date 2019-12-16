@@ -1,4 +1,5 @@
 import { PhotoFileInfo } from './photo-file-info';
+import {binaryToDateTime} from '~/lib/camera-connector/binary-dates-converters';
 
 const fileRegex = /wlan.*=.*,(.*),(\d+),(\d+),(\d+),(\d+)/g;
 
@@ -22,9 +23,14 @@ export function retrieveFiles(dir: string, html: string, thumbnailUrlBuilder: (n
         if (match !== null) {
             const [, name, size, , dateBinary, timeBinary] = match;
             const thumbnailUrl = thumbnailUrlBuilder(name);
-            console.log(thumbnailUrl);
             result.push(
-                new PhotoFileInfo(name, new Date(), thumbnailUrl, dir, parseInt(size, 10))
+                new PhotoFileInfo(
+                    name,
+                    binaryToDateTime(parseInt(dateBinary, 10), parseInt(timeBinary, 10)),
+                    thumbnailUrl,
+                    dir,
+                    parseInt(size, 10)
+                ),
             );
         }
     } while (match !== null);
