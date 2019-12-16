@@ -1,1 +1,11 @@
-/* Add mobile styles for the component here.  */
+.tile-container {
+    width: 50%;
+}
+
+.tile {
+    margin: 4px 8px;
+}
+
+Image {
+    height: 100px;
+}

@@ -39,3 +39,6 @@ typings/
 /.idea/workspace.xml
 /.idea/navEditor.xml
 /.idea/assetWizardSettings.xml
+
+# Python
+/venv

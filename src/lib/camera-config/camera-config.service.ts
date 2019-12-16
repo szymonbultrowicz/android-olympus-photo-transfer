@@ -13,6 +13,12 @@ const enum SettingsKeys {
     CAMERA_PATH = 'CAMERA_PATH',
 }
 
+function ensurePathFormat(path: string) {
+    return '/' + path
+        .replace(/^\/+/, '')
+        .replace(/\/+$/, '');
+}
+
 @Injectable({
     providedIn: 'root',
 })
@@ -62,12 +68,20 @@ export class CameraConfigService {
     }
 
     get cameraPath() {
-        return getString(SettingsKeys.CAMERA_PATH, '/DCIM');
+        return ensurePathFormat(getString(SettingsKeys.CAMERA_PATH, '/DCIM'));
     }
 
     set cameraPath(path: string) {
         if (this.cameraPath !== path) {
             setString(SettingsKeys.CAMERA_PATH, path);
         }
+    }
+
+    private
+
+    buildThumbnailUrl(dir: string, name: string) {
+        return `${this.cameraProto}://${this.cameraHost}${
+            this.cameraPort ? `:${this.cameraPort}` : ''
+        }/get_thumbnail.cgi?DIR=${this.cameraPath}${ensurePathFormat(dir)}${ensurePathFormat(name)}`;
     }
 }

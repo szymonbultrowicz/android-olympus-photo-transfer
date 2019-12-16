@@ -50,7 +50,7 @@ do
 	((i=i+1))
 done
 
-#ufraw-batch $photos_dir/*.ORF --out-type=jpeg --overwrite
+ufraw-batch $photos_dir/*.ORF --out-type=jpeg --overwrite
 for f in $photos_dir/*.jpg; do
     mv -- "$f" "${f%.jpg}.JPG"
 done

@@ -1,7 +1,8 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import { CameraClientService } from '~/lib/camera-connector/camera-client.service';
 import { Subject } from 'rxjs';
-import {takeUntil} from "rxjs/internal/operators";
+import {takeUntil} from 'rxjs/internal/operators';
+import {PhotoFileInfo} from '~/lib/camera-connector/photo-file-info';
 
 enum State {
     INITIAL_LOADING,
@@ -18,6 +19,7 @@ export class PhotosComponent implements OnInit, OnDestroy {
 
     states = State;
     state: State = State.INITIAL_LOADING;
+    files: PhotoFileInfo[] = [];
 
     private onDestroy$ = new Subject<void>();
 
@@ -35,7 +37,8 @@ export class PhotosComponent implements OnInit, OnDestroy {
             )
             .subscribe(
                 files => {
-                    console.log('FILES', files);
+                    console.log('FILES ' + new Date());
+                    this.files = files;
                     this.state = State.LOADED;
                     if (pullRefresh) {
                         pullRefresh.refreshing = false;

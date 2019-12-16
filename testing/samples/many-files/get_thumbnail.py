@@ -1,5 +1,6 @@
-#!/usr/bin/python
+#!/usr/bin/python2
 
+from __future__ import print_function
 import os
 import re
 
@@ -12,4 +13,4 @@ print("Content-Length: " + str(os.stat(jpg_file).st_size))
 print("")
 
 with open(jpg_file, 'rb') as f:
-    print(f.read())
+    print(f.read(), end='')
